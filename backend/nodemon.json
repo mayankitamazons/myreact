@@ -1,0 +1,7 @@
+{
+    "env": {
+        "JWT_KEY": "ainode_security_key",
+        "MONGO_URI": "mongodb://localhost/ainode",
+        "BASE_URL": "https://cureappnode.herokuapp.com/"
+    }
+}

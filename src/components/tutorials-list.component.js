@@ -38,10 +38,12 @@ class TutorialsList extends Component {
   retrieveTutorials() {
     TutorialDataService.getAll()
       .then(response => {
+     
         this.setState({
-          tutorials: response.data
+          tutorials: response.data.data
+  
         });
-        console.log(response.data);
+        
       })
       .catch(e => {
         console.log(e);
@@ -110,7 +112,7 @@ class TutorialsList extends Component {
           </Grid>
           <Grid item md={4}>
             <h2>Tutorials List</h2>
-
+            {console.log(tutorials,"hllo")}
             <div className="list-group">
               {tutorials &&
                 tutorials.map((tutorial, index) => (
@@ -120,7 +122,7 @@ class TutorialsList extends Component {
                     divider
                     button	
                     key={index}>
-                    {tutorial.title}
+                    {tutorial}
                   </ListItem>
                 ))}
             </div>

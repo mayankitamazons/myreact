@@ -2,8 +2,15 @@ import React, { Component } from "react";
 import TutorialDataService from "../services/tutorial.service";
 import { Link } from "react-router-dom";
 
-import { styles } from "../css-common"
-import { TextField, Button, Grid, ListItem, withStyles } from "@material-ui/core";
+import { styles } from "../css-common";
+import {
+  TextField,
+  Button,
+  Grid,
+  ListItem,
+  withStyles,
+  ListItemText,
+} from "@material-ui/core";
 
 class TutorialsList extends Component {
   constructor(props) {
@@ -19,7 +26,7 @@ class TutorialsList extends Component {
       tutorials: [],
       currentTutorial: null,
       currentIndex: -1,
-      searchTitle: ""
+      searchTitle: "",
     };
   }
 
@@ -31,21 +38,19 @@ class TutorialsList extends Component {
     const searchTitle = e.target.value;
 
     this.setState({
-      searchTitle: searchTitle
+      searchTitle: searchTitle,
     });
   }
 
   retrieveTutorials() {
     TutorialDataService.getAll()
-      .then(response => {
-     
+      .then((res) => {
+        console.log(res.data);
         this.setState({
-          tutorials: response.data.data
-  
+          tutorials: res.data.data,
         });
-        
       })
-      .catch(e => {
+      .catch((e) => {
         console.log(e);
       });
   }
@@ -54,49 +59,58 @@ class TutorialsList extends Component {
     this.retrieveTutorials();
     this.setState({
       currentTutorial: null,
-      currentIndex: -1
+      currentIndex: -1,
     });
   }
 
   setActiveTutorial(tutorial, index) {
     this.setState({
       currentTutorial: tutorial,
-      currentIndex: index
+      currentIndex: index,
     });
   }
 
   removeAllTutorials() {
     TutorialDataService.deleteAll()
-      .then(response => {
+      .then((response) => {
         console.log(response.data);
         this.refreshList();
       })
-      .catch(e => {
+      .catch((e) => {
         console.log(e);
       });
   }
 
   searchTitle() {
     TutorialDataService.findByTitle(this.state.searchTitle)
-      .then(response => {
+      .then((response) => {
         this.setState({
-          tutorials: response.data
+          tutorials: response.data,
         });
         console.log(response.data);
       })
-      .catch(e => {
+      .catch((e) => {
         console.log(e);
       });
   }
 
   render() {
-    const { classes } = this.props
-    const { searchTitle, tutorials, currentTutorial, currentIndex } = this.state;
+    const { classes } = this.props;
+    const { searchTitle, tutorials, currentTutorial, currentIndex } =
+      this.state;
 
     return (
       <div className={classes.form}>
         <Grid container>
-          <Grid className={classes.search} item sm={12} xs={12} md={12} xl={12} lg={12}>
+          <Grid
+            className={classes.search}
+            item
+            sm={12}
+            xs={12}
+            md={12}
+            xl={12}
+            lg={12}
+          >
             <TextField
               label="Search by title"
               value={searchTitle}
@@ -106,23 +120,18 @@ class TutorialsList extends Component {
               size="small"
               variant="outlined"
               className={classes.textField}
-              onClick={this.searchTitle}>
+              onClick={this.searchTitle}
+            >
               Search
             </Button>
           </Grid>
           <Grid item md={4}>
             <h2>Tutorials List</h2>
-            {console.log(tutorials,"hllo")}
             <div className="list-group">
               {tutorials &&
                 tutorials.map((tutorial, index) => (
-                  <ListItem
-                    selected={index === currentIndex}
-                    onClick={() => this.setActiveTutorial(tutorial, index)}
-                    divider
-                    button	
-                    key={index}>
-                    {tutorial}
+                  <ListItem key={index} >
+                    <ListItemText primary={tutorial.title} onClick={() => this.setActiveTutorial(tutorial, index)} />
                   </ListItem>
                 ))}
             </div>
@@ -135,7 +144,7 @@ class TutorialsList extends Component {
               onClick={this.removeAllTutorials}
             >
               Remove All
-          </Button>
+            </Button>
           </Grid>
           <Grid item md={8}>
             {currentTutorial ? (
@@ -161,18 +170,20 @@ class TutorialsList extends Component {
                 </div>
 
                 <Link
-                  to={"/tutorials/" + currentTutorial.id}
+                  to={"/tutorials/" + currentTutorial._id}
                   className={classes.edit}
                 >
                   Edit
-              </Link>
+                </Link>
               </div>
             ) : (
-                <div>
-                  <br />
-                  <p className={classes.tutorial}>Please click on a Tutorial...</p>
-                </div>
-              )}
+              <div>
+                <br />
+                <p className={classes.tutorial}>
+                  Please click on a Tutorial...
+                </p>
+              </div>
+            )}
           </Grid>
         </Grid>
       </div>
@@ -180,4 +191,4 @@ class TutorialsList extends Component {
   }
 }
 
-export default withStyles(styles)(TutorialsList)
+export default withStyles(styles)(TutorialsList);

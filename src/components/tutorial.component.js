@@ -57,9 +57,9 @@ class Tutorial extends Component {
         TutorialDataService.get(id)
             .then(response => {
                 this.setState({
-                    currentTutorial: response.data
+                    currentTutorial: response.data.data
                 });
-                console.log(response.data);
+                console.log(response.data, 'asdf');
             })
             .catch(e => {
                 console.log(e);
@@ -82,6 +82,7 @@ class Tutorial extends Component {
                         published: status
                     }
                 }));
+                this.props.history.push('/tutorials')
                 console.log(response.data);
             })
             .catch(e => {
@@ -90,8 +91,9 @@ class Tutorial extends Component {
     }
 
     updateTutorial() {
+        console.log(this.state);
         TutorialDataService.update(
-            this.state.currentTutorial.id,
+            this.state.currentTutorial._id,
             this.state.currentTutorial
         )
             .then(response => {
@@ -99,6 +101,7 @@ class Tutorial extends Component {
                 this.setState({
                     message: "The tutorial was updated successfully!"
                 });
+                
             })
             .catch(e => {
                 console.log(e);
